@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const { isEmail } = require("validator");
+const bcrypt = require("bcryptjs");
 
 const userSchema = mongoose.Schema({
   name: {
@@ -23,6 +24,12 @@ const userSchema = mongoose.Schema({
     enum: ["admin", "user"],
     default: "user",
   },
+});
+
+userSchema.pre("save", async function () {
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(this.password, salt);
+  this.password = hashedPassword;
 });
 
 module.exports = mongoose.model("User", userSchema);
