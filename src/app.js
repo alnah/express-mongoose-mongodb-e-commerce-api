@@ -3,11 +3,12 @@ require("express-async-errors");
 const express = require("express");
 const morgan = require("morgan");
 
-const connectDatabase = require("./database/connectDatabase");
+const { authRoutes } = require("./routes");
 const {
   routeNotFoundMiddleware: routeNotFound,
   errorHandlerMiddleware: errorHandler,
 } = require("./middlewares");
+const connectDatabase = require("./database/connectDatabase");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,6 +17,7 @@ app.use(morgan("tiny"));
 app.use(express.json());
 
 app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
+app.use("/api/v1/auth", authRoutes);
 
 app.use(routeNotFound);
 app.use(errorHandler);
