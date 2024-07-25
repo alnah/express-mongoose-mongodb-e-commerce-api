@@ -4,11 +4,13 @@ const { userModel } = require("../models");
 const { BadRequestError } = require("../errors");
 
 const register = async (req, res) => {
-  if (await userModel.findOne({ email: req.body.email })) {
+  const { name, email, password } = req.body;
+
+  if (await userModel.findOne({ email })) {
     throw new BadRequestError("This email already exists.");
   }
+  const user = await userModel.create({ name, email, password });
 
-  const user = await userModel.create(req.body);
   res.status(SC.CREATED).json({ user });
 };
 
