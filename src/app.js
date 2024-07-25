@@ -16,7 +16,13 @@ const port = process.env.PORT || 3000;
 app.use(morgan("tiny"));
 app.use(express.json());
 
+<<<<<<< HEAD
 app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
+=======
+// routes
+app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
+app.get("/api/v1", (req, res) => console.log(req.cookies));
+>>>>>>> 21388eb (feat(server): setup `cookieParser` and log `req.cookies` in the GET route `/api/v1` for testing purposes)
 app.use("/api/v1/auth", authRoutes);
 
 app.use(routeNotFound);
