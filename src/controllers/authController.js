@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const { userModel } = require("../models");
 const { BadRequestError } = require("../errors");
+const { createJwt } = require("../utils");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -13,9 +14,7 @@ const register = async (req, res) => {
 
   const user = await userModel.create({ name, email, password });
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
-  const token = jwt.sign(tokenUser, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
-  });
+  const token = createJwt({ payload: tokenUser });
 
   res.status(SC.CREATED).json({ user: tokenUser, token });
 };
