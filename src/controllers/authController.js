@@ -1,4 +1,5 @@
 const { StatusCodes: SC } = require("http-status-codes");
+const jwt = require("jsonwebtoken");
 
 const { userModel } = require("../models");
 const { BadRequestError } = require("../errors");
@@ -9,9 +10,14 @@ const register = async (req, res) => {
   if (await userModel.findOne({ email })) {
     throw new BadRequestError("This email already exists.");
   }
-  const user = await userModel.create({ name, email, password });
 
-  res.status(SC.CREATED).json({ user });
+  const user = await userModel.create({ name, email, password });
+  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const token = jwt.sign(tokenUser, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_LIFETIME,
+  });
+
+  res.status(SC.CREATED).json({ user: tokenUser, token });
 };
 
 const login = async (req, res) => {
