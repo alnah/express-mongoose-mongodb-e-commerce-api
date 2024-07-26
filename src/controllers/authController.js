@@ -2,7 +2,10 @@ const { StatusCodes: SC } = require("http-status-codes");
 
 const { userModel } = require("../models");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
-const { attachCookiesToResponse } = require("../utils");
+const {
+  attachCookiesToResponse,
+  detachCookiesFromResponse,
+} = require("../utils");
 
 const register = async (req, res) => {
   const { name, email, password } = req.body;
@@ -35,7 +38,7 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  res.send("logout user");
+  detachCookiesFromResponse({ res, status: SC.OK });
 };
 
 module.exports = { register, login, logout };
