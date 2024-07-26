@@ -5,6 +5,7 @@ const { BadRequestError, UnauthenticatedError } = require("../errors");
 const {
   attachCookiesToResponse,
   detachCookiesFromResponse,
+  createTokenUser,
 } = require("../utils");
 
 const register = async (req, res) => {
@@ -13,7 +14,7 @@ const register = async (req, res) => {
     throw new BadRequestError("This email already exists.");
   }
   const user = await userModel.create({ name, email, password });
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, status: SC.CREATED, user: tokenUser });
 };
 
@@ -33,7 +34,7 @@ const login = async (req, res) => {
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError("Invalid credentials.");
   }
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, status: SC.OK, user: tokenUser });
 };
 
