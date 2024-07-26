@@ -1,9 +1,34 @@
+const { StatusCodes: SC } = require("http-status-codes");
+
+const { NotFoundError, BadRequestError } = require("../errors");
+const { reviewModel, productModel } = require("../models");
+
 const getAllReviews = async (req, res, next) => {
   res.send("get all reviews");
 };
 
 const createReview = async (req, res, next) => {
-  res.send("create a review");
+  const { productId } = req.body;
+  const isValidProduct = await productModel.findOne({ _id: productId });
+  if (!isValidProduct) {
+    throw new NotFoundError(`Product not found with id: ${productId}`);
+  }
+  const { userId } = req.user;
+  const isAlreadySubmitted = await reviewModel.findOne({
+    user: userId,
+    product: productId,
+  });
+  if (isAlreadySubmitted) {
+    throw new BadRequestError(
+      `A review has already been submitted by user '${userId}' for product '${productId}'. Only one review per user per product is allowed.`
+    );
+  }
+  const review = await reviewModel.create({
+    ...req.body,
+    product: productId,
+    user: userId,
+  });
+  res.status(SC.CREATED).json({ review });
 };
 
 const getSingleReview = async (req, res, next) => {
