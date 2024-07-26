@@ -4,7 +4,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 
-const { authRoutes, userRoutes } = require("./routes");
+const { authRoutes, userRoutes, productRoutes } = require("./routes");
 const {
   routeNotFoundMiddleware: routeNotFound,
   errorHandlerMiddleware: errorHandler,
@@ -23,9 +23,9 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // routes
 app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
-app.get("/api/v1", (req, res) => console.log(req.signedCookies));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/products", productRoutes);
 
 // errors
 app.use(routeNotFound);
