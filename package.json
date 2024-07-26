@@ -1,7 +1,7 @@
 {
   "name": "express-mongoose-mongodb-e-commerce-api",
   "version": "1.0.0",
-  "description": "An E-Commerce RESTful API powered by Express.js and MongoDB via mongoose.",
+  "description": "An E-Commerce API powered by Express.js and MongoDB via mongoose.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
