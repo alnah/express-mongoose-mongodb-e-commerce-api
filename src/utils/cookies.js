@@ -1,10 +1,8 @@
-const { StatusCodes: SC } = require("http-status-codes");
-
 const { createJwt } = require("./jwt");
 
 const ONE_DAY = 1000 * 60 * 60 * 24;
 
-const attachCookiesToResponse = ({ res, user }) => {
+const attachCookiesToResponse = ({ res, status, user }) => {
   const token = createJwt({ payload: user });
 
   res.cookie("token", token, {
@@ -15,7 +13,7 @@ const attachCookiesToResponse = ({ res, user }) => {
     sameSite: "Strict",
   });
 
-  res.status(SC.CREATED).json({ user });
+  res.status(status).json({ user });
 };
 
 module.exports = attachCookiesToResponse;
