@@ -1,24 +1,32 @@
+const { StatusCodes: SC } = require("http-status-codes");
+
+const { productModel } = require("../models");
+
 const getAllProducts = (req, res, next) => {
   res.send("get all products");
 };
 
-const createProduct = (req, res, next) => {
-  res.send("create a product");
+const createProduct = async (req, res, next) => {
+  const product = await productModel.create({
+    ...req.body,
+    user: req.user.userId,
+  });
+  res.status(SC.CREATED).json({ product });
 };
 
-const getSingleProduct = (req, res, next) => {
+const getSingleProduct = async (req, res, next) => {
   res.send("get a single product");
 };
 
-const updateProduct = (req, res, next) => {
+const updateProduct = async (req, res, next) => {
   res.send("update a product");
 };
 
-const deleteProduct = (req, res, next) => {
+const deleteProduct = async (req, res, next) => {
   res.send("delete a product");
 };
 
-const uploadImage = (req, res, next) => {
+const uploadImage = async (req, res, next) => {
   res.send("upload an image");
 };
 
