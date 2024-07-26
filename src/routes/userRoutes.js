@@ -15,8 +15,8 @@ const {
 router.route("/").get(authUser, authPermissions("admin", "owner"), getAllUsers);
 
 router.route("/showMe").get(authUser, showCurrentUser);
-router.route("/updateUser").post(updateUser);
-router.route("/updateUserPassword").post(authUser, updateUserPassword);
+router.route("/updateUser").patch(updateUser);
+router.route("/updateUserPassword").patch(authUser, updateUserPassword);
 
 router.route("/:id").get(authUser, getSingleUser);
 
