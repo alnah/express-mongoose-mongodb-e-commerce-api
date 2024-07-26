@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 // file uploader
-app.use(fileUpload());
+app.use(fileUpload({ useTempFiles: true }));
 
 // cloudinary
 cloudinary.config({
