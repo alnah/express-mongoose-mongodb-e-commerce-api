@@ -3,6 +3,7 @@ require("express-async-errors");
 const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 
 const { authRoutes, userRoutes, productRoutes } = require("./routes");
 const {
@@ -20,6 +21,9 @@ app.use(morgan("tiny"));
 // parsers
 app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
+
+// file uploader
+app.use(fileUpload());
 
 // routes
 app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
