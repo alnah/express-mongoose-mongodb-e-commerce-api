@@ -16,4 +16,13 @@ const attachCookiesToResponse = ({ res, status, user }) => {
   res.status(status).json({ user });
 };
 
-module.exports = attachCookiesToResponse;
+const detachCookiesFromResponse = ({ res, status }) => {
+  res.cookie("token", null, {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+
+  res.status(status).json({ message: "User logged out." });
+};
+
+module.exports = { attachCookiesToResponse, detachCookiesFromResponse };
