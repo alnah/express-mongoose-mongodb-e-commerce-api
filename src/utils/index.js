@@ -4,6 +4,7 @@ const {
   detachCookiesFromResponse,
 } = require("./cookies");
 const createTokenUser = require("./createTokenUser");
+const checkPermissions = require("./checkPermissions");
 
 module.exports = {
   createJwt,
@@ -11,4 +12,5 @@ module.exports = {
   attachCookiesToResponse,
   detachCookiesFromResponse,
   createTokenUser,
+  checkPermissions,
 };
