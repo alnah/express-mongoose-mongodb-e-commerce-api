@@ -2,8 +2,9 @@ const { StatusCodes: SC } = require("http-status-codes");
 
 const { productModel } = require("../models");
 
-const getAllProducts = (req, res, next) => {
-  res.send("get all products");
+const getAllProducts = async (req, res, next) => {
+  const products = await productModel.find({});
+  res.status(SC.OK).json(products);
 };
 
 const createProduct = async (req, res, next) => {
