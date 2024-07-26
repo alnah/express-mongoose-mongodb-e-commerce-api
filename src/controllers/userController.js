@@ -6,6 +6,7 @@ const {
   BadRequestError,
   UnauthenticatedError,
 } = require("../errors");
+const { createTokenUser, attachCookiesToResponse } = require("../utils");
 
 const getAllUsers = async (req, res) => {
   const users = await userModel.find({ role: "user" }).select("-password");
@@ -27,7 +28,23 @@ const showCurrentUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  res.send("update user");
+  const {
+    user: { userId },
+    body: { name, email },
+  } = req;
+  if (!name) {
+    throw new BadRequestError("Name is required.");
+  }
+  if (!email) {
+    throw new BadRequestError("Email is required.");
+  }
+  const updatedUser = await userModel.findOneAndUpdate(
+    { _id: userId },
+    { name, email },
+    { new: true, runValidators: true }
+  );
+  const tokenUser = createTokenUser(updatedUser);
+  attachCookiesToResponse({ res, status: SC.OK, user: tokenUser });
 };
 
 const updateUserPassword = async (req, res) => {
