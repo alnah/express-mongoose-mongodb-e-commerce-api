@@ -55,6 +55,7 @@ const productSchema = mongoose.Schema(
     colors: {
       type: [String],
       required: [true, "At least one color is required."],
+      default: ["#222"],
     },
     featured: {
       type: Boolean,
