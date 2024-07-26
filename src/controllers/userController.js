@@ -1,20 +1,25 @@
-const getAllUsers = (req, res) => {
-  res.send("get all users");
+const { StatusCodes: SC } = require("http-status-codes");
+
+const { userModel } = require("../models");
+
+const getAllUsers = async (req, res) => {
+  const users = await userModel.find({ role: "user" }).select("-password");
+  res.status(SC.OK).json({ users });
 };
 
-const getSingleUser = (req, res) => {
+const getSingleUser = async (req, res) => {
   res.send("get single user");
 };
 
-const showCurrentUser = (req, res) => {
+const showCurrentUser = async (req, res) => {
   res.send("show current user");
 };
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
   res.send("update user");
 };
 
-const updateUserPassword = (req, res) => {
+const updateUserPassword = async (req, res) => {
   res.send("update user password");
 };
 
