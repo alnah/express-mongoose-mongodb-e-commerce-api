@@ -1,6 +1,7 @@
 const { StatusCodes: SC } = require("http-status-codes");
 
 const { userModel } = require("../models");
+const { NotFoundError } = require("../errors");
 
 const getAllUsers = async (req, res) => {
   const users = await userModel.find({ role: "user" }).select("-password");
@@ -8,7 +9,12 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  res.send("get single user");
+  const userId = req.params.id;
+  const user = await userModel.findOne({ _id: userId }).select("-password");
+  if (!user) {
+    throw new NotFoundError(`User not found with id: ${userId}`);
+  }
+  res.status(SC.OK).json({ user });
 };
 
 const showCurrentUser = async (req, res) => {
