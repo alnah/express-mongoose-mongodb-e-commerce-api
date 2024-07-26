@@ -10,7 +10,7 @@ const {
 
 const { authenticateUserMiddleware: authUser } = require("../middlewares");
 
-router.route("/").get(getAllReviews).createReview(authUser, createReview);
+router.route("/").get(getAllReviews).post(authUser, createReview);
 router
   .route("/:id")
   .get(getSingleReview)
