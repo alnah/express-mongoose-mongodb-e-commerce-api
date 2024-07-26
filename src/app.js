@@ -4,6 +4,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const cloudinary = require("cloudinary").v2;
 
 const { authRoutes, userRoutes, productRoutes } = require("./routes");
 const {
@@ -24,6 +25,13 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // file uploader
 app.use(fileUpload());
+
+// cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // routes
 app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
