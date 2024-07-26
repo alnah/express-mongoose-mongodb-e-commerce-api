@@ -1,3 +1,5 @@
+const { StatusCodes: SC } = require("http-status-codes");
+
 const { userModel } = require("../models");
 const { BadRequestError, UnauthenticatedError } = require("../errors");
 const { attachCookiesToResponse } = require("../utils");
@@ -9,7 +11,7 @@ const register = async (req, res) => {
   }
   const user = await userModel.create({ name, email, password });
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
-  attachCookiesToResponse({ res, user: tokenUser });
+  attachCookiesToResponse({ res, status: SC.CREATED, user: tokenUser });
 };
 
 const login = async (req, res) => {
@@ -29,7 +31,7 @@ const login = async (req, res) => {
     throw new UnauthenticatedError("Invalid credentials.");
   }
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
-  attachCookiesToResponse({ res, user: tokenUser });
+  attachCookiesToResponse({ res, status: SC.OK, user: tokenUser });
 };
 
 const logout = async (req, res) => {
