@@ -6,7 +6,12 @@ const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
 
-const { authRoutes, userRoutes, productRoutes } = require("./routes");
+const {
+  authRoutes,
+  userRoutes,
+  productRoutes,
+  reviewRoutes,
+} = require("./routes");
 const {
   routeNotFoundMiddleware: routeNotFound,
   errorHandlerMiddleware: errorHandler,
@@ -38,6 +43,7 @@ app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 
 // errors
 app.use(routeNotFound);
