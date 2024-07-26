@@ -1,4 +1,7 @@
+const fs = require("fs");
+
 const { StatusCodes: SC } = require("http-status-codes");
+const cloudinary = require("cloudinary").v2;
 
 const { productModel } = require("../models");
 const { NotFoundError } = require("../errors");
@@ -51,7 +54,13 @@ const deleteProduct = async (req, res, next) => {
 };
 
 const uploadImage = async (req, res, next) => {
-  res.send("upload an image");
+  const tmpFilePath = req.files.image.tempFilePath;
+  const result = await cloudinary.uploader.upload(tmpFilePath, {
+    use_filename: true,
+    folder: "file-upload",
+  });
+  fs.unlinkSync(tmpFilePath);
+  res.status(SC.OK).json({ image: { src: result.secure_url } });
 };
 
 module.exports = {
