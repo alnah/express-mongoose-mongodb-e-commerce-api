@@ -1,4 +1,4 @@
-const getAllReview = async (req, res, next) => {
+const getAllReviews = async (req, res, next) => {
   res.send("get all reviews");
 };
 
@@ -19,7 +19,7 @@ const deleteReview = async (req, res, next) => {
 };
 
 module.exports = {
-  getAllReview,
+  getAllReviews,
   createReview,
   getSingleReview,
   updateReview,
