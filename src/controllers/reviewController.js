@@ -33,7 +33,12 @@ const createReview = async (req, res, next) => {
 };
 
 const getSingleReview = async (req, res, next) => {
-  res.send("get a single review");
+  const reviewId = req.params.id;
+  const review = await reviewModel.findOne({ _id: reviewId });
+  if (!review) {
+    throw new NotFoundError(`Review not found with id: ${reviewId}.`);
+  }
+  res.status(SC.OK).json({ review });
 };
 
 const updateReview = async (req, res, next) => {
