@@ -5,7 +5,9 @@ const { reviewModel, productModel, userModel } = require("../models");
 const { checkPermissions } = require("../utils");
 
 const getAllReviews = async (req, res, next) => {
-  const reviews = await reviewModel.find({});
+  const reviews = await reviewModel
+    .find({})
+    .populate("product", "name company price");
   res.status(SC.OK).json({ reviews, count: reviews.length });
 };
 
