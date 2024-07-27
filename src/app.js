@@ -11,6 +11,7 @@ const {
   userRoutes,
   productRoutes,
   reviewRoutes,
+  orderRoutes,
 } = require("./routes");
 const {
   routeNotFoundMiddleware: routeNotFound,
@@ -44,6 +45,7 @@ app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
+app.use("/api/v1/orders", orderRoutes);
 
 // errors
 app.use(routeNotFound);
