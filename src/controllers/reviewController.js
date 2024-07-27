@@ -1,7 +1,8 @@
 const { StatusCodes: SC } = require("http-status-codes");
 
 const { NotFoundError, BadRequestError } = require("../errors");
-const { reviewModel, productModel } = require("../models");
+const { reviewModel, productModel, userModel } = require("../models");
+const { checkPermissions } = require("../utils");
 
 const getAllReviews = async (req, res, next) => {
   const reviews = await reviewModel.find({});
@@ -46,7 +47,16 @@ const updateReview = async (req, res, next) => {
 };
 
 const deleteReview = async (req, res, next) => {
-  res.send("delete a review");
+  const reviewId = req.params.id;
+  const review = await reviewModel.findOne({ _id: reviewId });
+  if (!review) {
+    throw new NotFoundError(`Review not found with id: ${reviewId}.`);
+  }
+  checkPermissions(req.user, review.user);
+  await review.deleteOne();
+  res
+    .status(SC.OK)
+    .json({ message: `Successfully deleted review with id: ${reviewId}.` });
 };
 
 module.exports = {
