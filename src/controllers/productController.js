@@ -49,7 +49,7 @@ const deleteProduct = async (req, res, next) => {
   if (!product) {
     throw new NotFoundError(`Product not found with id: ${productId}.`);
   }
-  await product.remove();
+  await product.deleteOne();
   res
     .status(SC.OK)
     .json({ message: `Successfully deleted product with id: ${productId}.` });
