@@ -18,8 +18,8 @@ router
   .get(authUser, authPermissions("admin"), getAllOrders)
   .post(authUser, createOrder);
 
-router.route("/:id").get(authUser, getSingleOrder).patch(authUser, updateOrder);
-
 router.route("/showAllMyOrders").get(authUser, getCurrentUserOrders);
+
+router.route("/:id").get(authUser, getSingleOrder).patch(authUser, updateOrder);
 
 module.exports = router;
