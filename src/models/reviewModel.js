@@ -37,4 +37,45 @@ const reviewSchema = mongoose.Schema(
 // only one review per product and per user
 reviewSchema.index({ product: 1, user: 1 }, { unique: true });
 
+reviewSchema.statics.updateProductRatingStats = async function (productId) {
+  const pipeline = [
+    // match reviews for the specified product
+    { $match: { product: productId } },
+    // group all matched reviews to calculate average rating and total reviews
+    {
+      $group: {
+        _id: null, // no criteria to group and aggregate all matched documents
+        averageRating: { $avg: "$rating" }, // calculate average rating
+        numOfReviews: { $sum: 1 }, // count the number of reviews
+      },
+    },
+  ];
+  const result = await this.aggregate(pipeline);
+  try {
+    await this.model("Product").findOneAndUpdate(
+      { _id: productId },
+      {
+        averageRating: Math.ceil(result[0]?.averageRating || 0),
+        numOfReviews: result[0]?.numOfReviews || 0,
+      }
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// update product rating stats on product.save() method
+reviewSchema.post("save", async function () {
+  await this.constructor.updateProductRatingStats(this.product);
+});
+
+// update product rating stats on product.deleteOne() method
+reviewSchema.post(
+  "deleteOne",
+  { document: true, query: false },
+  async function () {
+    await this.constructor.updateProductRatingStats(this.product);
+  }
+);
+
 module.exports = mongoose.model("Review", reviewSchema);
