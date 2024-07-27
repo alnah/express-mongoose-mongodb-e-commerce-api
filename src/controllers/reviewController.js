@@ -43,7 +43,22 @@ const getSingleReview = async (req, res, next) => {
 };
 
 const updateReview = async (req, res, next) => {
-  res.send("update a review");
+  const {
+    params: { id: reviewId },
+    body: { title, comment, rating },
+  } = req;
+  const review = await reviewModel.findOne({ _id: reviewId });
+  if (!review) {
+    throw new NotFoundError(`Review not found with id: ${reviewId}.`);
+  }
+  checkPermissions(req.user, review.user);
+  Object.assign(review, {
+    title: title ?? review.title,
+    comment: comment ?? review.comment,
+    rating: rating ?? review.rating,
+  });
+  await review.save();
+  res.status(SC.OK).json({ review });
 };
 
 const deleteReview = async (req, res, next) => {
