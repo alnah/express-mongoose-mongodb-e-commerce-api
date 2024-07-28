@@ -46,7 +46,9 @@ app.use(mongoSanitize());
 app.use(cors());
 
 // logger
-app.use(morgan("tiny"));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("tiny"));
+}
 
 // parsers
 app.use(express.json());
@@ -63,9 +65,6 @@ cloudinary.config({
 });
 
 // routes
-app.get("/", (req, res) =>
-  res.sendFile(path.join(__dirname, "../public/index.html"))
-);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/products", productRoutes);
