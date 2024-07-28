@@ -1,3 +1,5 @@
+const path = require("path");
+
 require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
@@ -40,7 +42,9 @@ cloudinary.config({
 });
 
 // routes
-app.get("/", (req, res) => res.send("<h1>Welcome on this eCommerce API!</h1>"));
+app.get("/", (req, res) =>
+  res.sendFile(path.join(__dirname, "../public/index.html"))
+);
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/products", productRoutes);
