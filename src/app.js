@@ -7,7 +7,7 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
-const rateLimiter = require("express-rate-limiter");
+const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const xss = require("xss-clean");
 const cors = require("cors");
@@ -32,9 +32,11 @@ const port = process.env.PORT || 3000;
 // security
 app.set("trust proxy", 1);
 app.use(
-  rateLimiter({
+  rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 60,
+    limit: 100,
+    standardHeaders: "draft-7",
+    legacyHeaders: false,
   })
 );
 app.use(helmet());
