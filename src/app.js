@@ -7,6 +7,11 @@ const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const cloudinary = require("cloudinary").v2;
+const rateLimiter = require("express-rate-limiter");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const cors = require("cors");
+const mongoSanitize = require("express-mongo-sanitize");
 
 const {
   authRoutes,
@@ -23,6 +28,20 @@ const connectDatabase = require("./database/connectDatabase");
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// security
+app.set("trust proxy", 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000,
+    max: 60,
+  })
+);
+app.use(helmet());
+app.use(xss());
+app.use(mongoSanitize());
+// cookies are not CORS, you must set a proxy on client-side
+app.use(cors());
 
 // logger
 app.use(morgan("tiny"));
