@@ -13,7 +13,9 @@ const register = async (req, res) => {
   if (await userModel.findOne({ email })) {
     throw new BadRequestError("This email already exists.");
   }
-  const user = await userModel.create({ name, email, password });
+  const isFirstUser = (await userModel.countDocuments({})) === 0;
+  const role = isFirstUser ? "admin" : "user";
+  const user = await userModel.create({ name, email, password, role });
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, status: SC.CREATED, user: tokenUser });
 };
