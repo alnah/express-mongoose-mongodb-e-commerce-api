@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const singleCartItemSchema = mongoose.Schema({
+const singleOrderItemSchema = mongoose.Schema({
   name: {
     type: String,
     required: [true, "Item name is required. Please provide a name."],
@@ -48,7 +48,7 @@ const orderSchema = mongoose.Schema(
         "Total amount is required. Please provide a total amount.",
       ],
     },
-    cardItems: [singleCartItemSchema],
+    orderItems: [singleOrderItemSchema],
     status: {
       type: String,
       enum: ["pending", "failed", "delivered", "canceled"],
