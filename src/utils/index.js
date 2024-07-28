@@ -5,6 +5,7 @@ const {
 } = require("./cookies");
 const createTokenUser = require("./createTokenUser");
 const checkPermissions = require("./checkPermissions");
+const fakeStripeApi = require("./fakeStripeApi");
 
 module.exports = {
   createJwt,
@@ -13,4 +14,5 @@ module.exports = {
   detachCookiesFromResponse,
   createTokenUser,
   checkPermissions,
+  fakeStripeApi,
 };
