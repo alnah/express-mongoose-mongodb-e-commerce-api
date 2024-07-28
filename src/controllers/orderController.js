@@ -2,10 +2,11 @@ const { StatusCodes: SC } = require("http-status-codes");
 
 const { BadRequestError, NotFoundError } = require("../errors");
 const { productModel, orderModel } = require("../models");
-const { fakeStripeApi } = require("../utils");
+const { fakeStripeApi, checkPermissions } = require("../utils");
 
 const getAllOrders = async (req, res) => {
-  res.send("Get all orders");
+  const orders = await orderModel.find({});
+  res.status(SC.OK).json({ orders, count: orders.length });
 };
 
 const createOrder = async (req, res) => {
@@ -55,15 +56,34 @@ const createOrder = async (req, res) => {
 };
 
 const getSingleOrder = async (req, res) => {
-  res.send("Get single order");
+  const orderId = req.params.id;
+  const order = await orderModel.findOne({ _id: orderId });
+  if (!order) {
+    throw new NotFoundError(`Order not found with id: ${orderId}`);
+  }
+  checkPermissions(req.user, order.user);
+  res.status(SC.OK).json({ order });
 };
 
 const getCurrentUserOrders = async (req, res) => {
-  res.send("Get current user orders");
+  const currentUserId = req.user.userId;
+  const orders = await orderModel.find({ user: currentUserId });
+  res.status(SC.OK).json({ orders, count: orders.length });
 };
 
 const updateOrder = async (req, res) => {
-  res.send("Update order");
+  const { id: orderId } = req.params;
+  const { paymentIntentId } = req.body;
+  const order = await orderModel.findOne({ _id: orderId });
+  if (!order) {
+    throw new NotFoundError(`Order not found with id: ${orderId}`);
+  }
+  checkPermissions(req.user, order.user);
+  await orderModel.updateOne(
+    { paymentIntentId, status: "paid" },
+    { new: true, runValidators: true }
+  );
+  res.status(SC.OK).json({ order });
 };
 
 module.exports = {
